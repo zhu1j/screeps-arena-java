@@ -1,0 +1,22 @@
+target/
+dist/
+.probe*
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node harness
+node_modules/
+package-lock.json
+
+# 临时工作目录（截图、提取脚本等）
+.codex-tmp/

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.github.screepsarena</groupId>
+  <artifactId>screeps-arena-java</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>Screeps Arena Java</name>
+  <description>Write Screeps: Arena bots in Java. Compiles Java bytecode into the single ES module the arena client loads.</description>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.release>17</maven.compiler.release>
+    <teavm.version>0.15.0</teavm.version>
+    <arena.output.dir>${project.basedir}/dist</arena.output.dir>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.teavm</groupId>
+      <artifactId>teavm-classlib</artifactId>
+      <version>${teavm.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.teavm</groupId>
+      <artifactId>teavm-jso</artifactId>
+      <version>${teavm.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.teavm</groupId>
+      <artifactId>teavm-interop</artifactId>
+      <version>${teavm.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.teavm</groupId>
+        <artifactId>teavm-maven-plugin</artifactId>
+        <version>${teavm.version}</version>
+        <configuration>
+          <targetFileName>main.mjs</targetFileName>
+          <targetType>JAVASCRIPT</targetType>
+          <jsModuleType>ES2015</jsModuleType>
+          <optimizationLevel>SIMPLE</optimizationLevel>
+          <minifying>false</minifying>
+          <strict>true</strict>
+          <sourceMapsGenerated>false</sourceMapsGenerated>
+          <debugInformationGenerated>false</debugInformationGenerated>
+        </configuration>
+        <executions>
+          <!-- 一个关卡一个产物目录：游戏客户端指向哪个目录，就是在跑哪一关。 -->
+          <execution>
+            <id>spawn-and-swamp</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <targetDirectory>${arena.output.dir}/spawn-and-swamp</targetDirectory>
+              <mainClass>bot.spawnswamp.Main</mainClass>
+            </configuration>
+          </execution>
+          <execution>
+            <id>capture-the-flag</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <targetDirectory>${arena.output.dir}/capture-the-flag</targetDirectory>
+              <mainClass>bot.ctf.Main</mainClass>
+            </configuration>
+          </execution>
+          <execution>
+            <id>harvest</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <targetDirectory>${arena.output.dir}/harvest</targetDirectory>
+              <mainClass>bot.harvest.Main</mainClass>
+            </configuration>
+          </execution>
+          <!-- 自检 bot：给离线测试（tools/tests/probe.mjs）用，不是拿来玩的关卡。 -->
+          <execution>
+            <id>probe</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <targetDirectory>${arena.output.dir}/probe</targetDirectory>
+              <mainClass>bot.probe.Main</mainClass>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
